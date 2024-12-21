@@ -5,16 +5,18 @@ import { UsersRepository } from './users.repository';
 import { User } from "./users.entity";
 import { JwtPayload } from "./jwt-payload.interface";
 import { InjectRepository } from "@nestjs/typeorm";
+import { ConfigService } from "@nestjs/config";
 
 
 @Injectable() 
 export class JwtStrategy extends PassportStrategy(Strategy) {
     constructor(
         @InjectRepository(UsersRepository)
-        private usersRepository: UsersRepository
+        private usersRepository: UsersRepository,
+        private configService: ConfigService
     ) {
         super({
-            secretOrKey: "123456789",
+            secretOrKey: configService.get('JWT_SECRET'),
             jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
         })
     }
