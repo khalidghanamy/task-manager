@@ -7,15 +7,18 @@ import { GetTasksDto } from './dto/get-tasks.dto';
 import { Task } from './task.entity';
 import { AuthGuard } from '@nestjs/passport';
 import { GetUser } from 'src/auth/get-user.decorator';
+import { Logger } from "@nestjs/common";
 
 @Controller('tasks')
 @UseGuards(AuthGuard())
 export class TasksController {
+    private logger = new Logger('TasksController');
+
     constructor(private tasksService: TasksService) { }
 
     @Get()
     getAllTasks(@Query() GetTasksDto: GetTasksDto, @GetUser() user): Promise<Task[]> {
-
+        this.logger.verbose(`User "${user.username}" retrieving all tasks. Filters: ${JSON.stringify(GetTasksDto)}`);
         return this.tasksService.getAllTasks(GetTasksDto, user);
     }
 

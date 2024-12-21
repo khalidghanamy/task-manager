@@ -3,10 +3,11 @@ import { Task } from "./task.entity";
 import { TaskStatus } from "./task-status";
 import { NotFoundException } from "@nestjs/common";
 import { User } from "src/auth/users.entity";
+import { Logger } from "@nestjs/common";
 
 @EntityRepository(Task)
 export class TasksRepository extends Repository<Task> {
-
+    private logger = new Logger('TasksRepository');
     async getById(id: string, user: User): Promise<Task> {
         let res = await this.findOne({
             where: { id, user }
@@ -31,6 +32,7 @@ export class TasksRepository extends Repository<Task> {
     async deleteTask(id: string, user: User): Promise<string> {
         let result = await this.delete({ id, user });
         if (result.affected === 0) {
+            this.logger.error(`User ${user} : Task with ID "${id}" not found`);
             throw new NotFoundException();
         }
         return "Task deleted successfully";
