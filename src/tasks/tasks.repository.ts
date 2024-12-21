@@ -2,6 +2,7 @@ import { EntityRepository, Like, Not, Repository } from "typeorm";
 import { Task } from "./task.entity";
 import { TaskStatus } from "./task-status";
 import {NotFoundException } from "@nestjs/common";
+import { User } from "src/auth/users.entity";
 
 @EntityRepository(Task)
 export class TasksRepository extends Repository<Task> {
@@ -12,11 +13,12 @@ export class TasksRepository extends Repository<Task> {
         });
     }
 
-    async createTask(title: string, description: string): Promise<Task> {
+    async createTask(title: string, description: string,user:User): Promise<Task> {
         const task = this.create({
             title,
             description,
-            status: TaskStatus.OPEN
+            status: TaskStatus.OPEN,
+            user
         });
          await this.save(task);
          return task;
