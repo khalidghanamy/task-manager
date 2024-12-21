@@ -30,7 +30,7 @@ export class TasksService {
         return this.tasksRepository.createTask(title, description,user);
     }
 
-    deleteTask(id: string,user:User): Promise<void>{
+    deleteTask(id: string,user:User): Promise<string>{
        return this.tasksRepository.deleteTask(id,user);
     }
 
