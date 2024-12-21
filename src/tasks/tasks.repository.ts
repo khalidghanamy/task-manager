@@ -7,7 +7,7 @@ import { User } from "src/auth/users.entity";
 @EntityRepository(Task)
 export class TasksRepository extends Repository<Task> {
 
-    async getById(id: string): Promise<Task> {
+    async getById(id: string,user:User): Promise<Task> {
         return await this.findOne({
             where: { id }
         });
@@ -24,22 +24,23 @@ export class TasksRepository extends Repository<Task> {
          return task;
     }
 
-    async deleteTask(id: string): Promise<void> {
-        let result = await this.delete(id);
+    async deleteTask(id: string,user:User): Promise<void> {
+        let result = await this.delete({ id, user });
         if (result.affected === 0) {
             throw new NotFoundException();
         }
     }
 
-    async updateTaskStatus(id: string, status: TaskStatus): Promise<Task> {
-        let task = await this.getById(id);
+    async updateTaskStatus(id: string, status: TaskStatus,user:User): Promise<Task> {
+        let task = await this.getById(id,user);
         task.status = status;
         return await this.save(task);
     }
 
-    async getTasks(status: TaskStatus, search: string, limit: number, page: number, sort: { [key: string]: 'ASC' | 'DESC' }): Promise<Task[]> {
+    async getTasks(status: TaskStatus, search: string, limit: number, page: number, sort: { [key: string]: 'ASC' | 'DESC' },user:User): Promise<Task[]> {
         const where: { [key: string]: any } = {
             ...(status ? { status } : {}),
+            ...(user ? { user } : {}),
             ...(search ? [
                 { title: Like(`%${search}%`) },
                 { description: Like(`%${search}%`) }

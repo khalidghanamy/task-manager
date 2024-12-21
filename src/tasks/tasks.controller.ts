@@ -14,33 +14,34 @@ export class TasksController {
     constructor(private tasksService: TasksService) { }
 
     @Get()
-    getAllTasks(@Query() GetTasksDto: GetTasksDto): Promise<Task[]> {
-        
-        return this.tasksService.getAllTasks(GetTasksDto);
+    getAllTasks(@Query() GetTasksDto: GetTasksDto, @GetUser() user): Promise<Task[]> {
+
+        return this.tasksService.getAllTasks(GetTasksDto, user);
     }
 
     @Get('/:id')
-    getTaskById(@Param("id") id: string): Promise<Task> {
-        return this.tasksService.getTaskById(id);
+    getTaskById(@Param("id") id: string, @GetUser() user): Promise<Task> {
+        return this.tasksService.getTaskById(id, user);
     }
 
     @Post()
-    createTask(@Body() createTaskDto: CreateTaskDto,@GetUser() user): Promise<Task> {
-        return this.tasksService.createTask(createTaskDto,user);
+    createTask(@Body() createTaskDto: CreateTaskDto, @GetUser() user): Promise<Task> {
+        return this.tasksService.createTask(createTaskDto, user);
     }
 
     @Delete('/:id')
-    deleteTask(@Param("id") id: string): Promise<void> {
-        return this.tasksService.deleteTask(id);
+    deleteTask(@Param("id") id: string, @GetUser() user): Promise<void> {
+        return this.tasksService.deleteTask(id, user);
     }
 
     @Patch('/:id/status')
     updateTaskStatus(
         @Param("id") id: string,
-        @Body() updateTaskDto: UpdateTaskDto
+        @Body() updateTaskDto: UpdateTaskDto,
+        @GetUser() user
     ): Promise<Task> {
         const { status } = updateTaskDto;
-        return this.tasksService.updateTaskStatus(id, status);
+        return this.tasksService.updateTaskStatus(id, status, user);
     }
 
 

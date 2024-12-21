@@ -16,13 +16,13 @@ export class TasksService {
     private tasksRepository: TasksRepository,
   ) {}
 
-    getAllTasks(getTasksDto: GetTasksDto): Promise<Task[]> {
+    getAllTasks(getTasksDto: GetTasksDto,user:User): Promise<Task[]> {
         const { status, search, page, limit, sort } = getTasksDto;
-        return this.tasksRepository.getTasks(status, search,limit, page, sort );
+        return this.tasksRepository.getTasks(status, search,limit, page, sort ,user);
     }
 
-    getTaskById(id: string): Promise<Task> {
-        return this.tasksRepository.getById(id);
+    getTaskById(id: string,user:User): Promise<Task> {
+        return this.tasksRepository.getById(id,user);
     }
 
     createTask(createTaskDto: CreateTaskDto,user:User): Promise<Task> {
@@ -30,11 +30,11 @@ export class TasksService {
         return this.tasksRepository.createTask(title, description,user);
     }
 
-    deleteTask(id: string): Promise<void>{
-       return this.tasksRepository.deleteTask(id);
+    deleteTask(id: string,user:User): Promise<void>{
+       return this.tasksRepository.deleteTask(id,user);
     }
 
-    updateTaskStatus(id: string, status: TaskStatus): Promise<Task> {
-        return this.tasksRepository.updateTaskStatus(id, status);
+    updateTaskStatus(id: string, status: TaskStatus,user:User): Promise<Task> {
+        return this.tasksRepository.updateTaskStatus(id, status,user);
     }
 }
